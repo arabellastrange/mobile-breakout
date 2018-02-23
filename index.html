@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="icon" size="192x192" href="img/cactus2.png">
+    <link rel = "apple-touch-icon" href="img/cactus2.png">
+    <link rel="shourtcut icon" href="img/cactus2.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="breakout.css">
+    <title>Breakout</title>
+</head>
+<body>
+    <div id="main">
+        <canvas id = "ball"></canvas>
+        <canvas id = "paddle"></canvas>
+    </div>
+</body>
+<footer>
+    <p id = "sensors" style="font-size: 2em"></p>
+    <p id = "return" style="font-size: 2em"></p>
+    <p id = "move" style="font-size: 2em"></p>
+    <script src="model.js"></script>
+    <script src = "view.js"></script>
+    <script src = "controller.js"></script>
+</footer>
+</html>
