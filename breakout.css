@@ -8,17 +8,6 @@ div#main{
     height: 100vh;
 }
 
-canvas#paddle{
-    width: 100%;
-    height: 5%;
-    bottom: 3em;
-    position: absolute;
-}
-
-canvas#ball{
-    height: 100%;
-    width: 100%;
-}
 
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 
