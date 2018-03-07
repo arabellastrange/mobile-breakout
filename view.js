@@ -1,17 +1,17 @@
 function view() {
     var moving = document.getElementById("move"),
         canvas = document.getElementById("canvas"),
+        overlay = document.getElementById("losingOverlay"),
+        replay = document.getElementById("replay"),
         canvasBall,
         canvasPaddle,
         bricks = [],
-        brickRows = 1,
+        brickRows = 4,
         brickCols = 5,
-        //gravity = 0.05,
-        angle = (90 * Math.PI/180), // change to 45
+        angle = (45 * Math.PI/180), // change to 45
         speed = 25,
-        bounce = 0.8,
-        friction = 0.01,
-        acceleration = 0.5;
+        acceleration = 0.5,
+        gameLoop,
         drawCircle = function (context, x,y,r, fill) {
             context.beginPath();
             context.fillStyle = fill;
@@ -32,7 +32,7 @@ function view() {
                 h;
             for(var i = 0; i < brickRows; i++){
                 for(var n = 0; n < brickCols; n++){
-              //      console.log("in loop x is: " + bricks[i][n].x + " and y is: " + bricks[i][n].y + " status is: " +  bricks[i][n].status);
+               // console.log("in loop x is: " + bricks[i][n].x + " and y is: " + bricks[i][n].y + " status is: " +  bricks[i][n].status);
                     if(bricks[i][n].status === 1){
                         context.beginPath();
                         context.fillStyle = bricks[i][n].fillColor;
@@ -49,7 +49,7 @@ function view() {
             }
             currentx = 0;
             currenty = 0;
-            //console.log("outside loop x is: " + bricks[2][1].x + " and y is: " + bricks[2][1].y + " status is: " +  bricks[2][1].status);
+           // console.log("outside loop x is: " + bricks[2][1].x + " and y is: " + bricks[2][1].y + " status is: " +  bricks[2][1].status);
         },
         canvasPaint =  function (){
             var context = canvas.getContext("2d");
@@ -72,6 +72,7 @@ function view() {
     this.init = function () {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        setReplayFunction();
 
         canvasBall = {fillColor: "pink", x: percentage(canvas.width,50), y: percentage(canvas.height,50) , r: 50, xVelocity: (Math.cos(angle)*speed), yVelocity: (Math.sin(angle)*speed)};
         canvasPaddle = {fillColor: "#d6e9c6", x: (canvas.width - percentage(canvas.width,70)), y: (canvas.height - percentage(canvas.height,5)), width: percentage(canvas.width,30), height: percentage(canvas.height,15)};
@@ -82,29 +83,31 @@ function view() {
             for(var n = 0; n < brickCols; n++){
                 bricks[i][n] = {fillColor: "#fdf3c3", x: 0, y: 0, width: percentage(canvas.width,18), height: percentage(canvas.height, 4), status: 1};
             }
-        }
+        };
+
         loop();
     };
+    
+    function losingScreen() {
+        overlay.style.width = "100%";
+    }
 
     function moveBall() {
-        //canvasBall.yVelocity += gravity;
-        canvasBall.xVelocity = canvasBall.xVelocity - (canvasBall.xVelocity * friction);
-
         canvasBall.x += canvasBall.xVelocity;
         canvasBall.y += canvasBall.yVelocity;
 
-        wallCollision();
         paddleCollision();
+        wallCollision();
 
         for(var i = 0; i < brickRows; i++) {
             for(var n = 0; n < brickCols; n++) {
                if( bricks[i][n].status === 1){
                    if(brickCollision(bricks[i][n])){
                        bricks[i][n].status = 0;
-                       console.log ("Collision  row " + i +" column " + n );
+                       /*console.log ("Collision  row " + i +" column " + n );
                        console.log("collision x is: " + bricks[i][n].x + " and y is: " + bricks[i][n].y + " status is: " +  bricks[i][n].status);
                        console.log("Ball x is  " +canvasBall.x + " y is " + canvasBall.y );
-                       console.log("Ball x + radius  is  " + (canvasBall.x + canvasBall.r) + " y is " + (canvasBall.y - canvasBall.r) );
+                       console.log("Ball x + radius  is  " + (canvasBall.x + canvasBall.r) + " y is " + (canvasBall.y - canvasBall.r) );*/
                    };
                };
             };
@@ -112,8 +115,7 @@ function view() {
     };
 
     function loop() {
-        window.setTimeout(loop, 20);
-        canvasPaint();
+        gameLoop = setInterval(canvasPaint, 30);
     };
 
     function percentage(number, percent) {
@@ -124,22 +126,17 @@ function view() {
         if(canvasBall.x + canvasBall.r  >= canvas.width){
             canvasBall.x = canvas.width - canvasBall.r;
             canvasBall.xVelocity = -canvasBall.xVelocity;
-            canvasBall.xVelocity *= bounce;
         }else if(canvasBall.x - canvasBall.r <= 0){
             canvasBall.x = canvasBall.r;
             canvasBall.xVelocity = -canvasBall.xVelocity;
-            canvasBall.xVelocity *= bounce;
         };
-
         if(canvasBall.y + canvasBall.r >= canvas.height){
-            canvasBall.y = canvas.height - canvasBall.r;
-            canvasBall.yVelocity = - canvasBall.yVelocity;
-            canvasBall.yVelocity *= bounce;
+            clearInterval(gameLoop);
+            losingScreen();
 
         }else if(canvasBall.y - canvasBall.r <= 0){
             canvasBall.y = canvasBall.r;
             canvasBall.yVelocity = - canvasBall.yVelocity;
-            canvasBall.yVelocity *= bounce;
         };
     };
 
@@ -147,7 +144,6 @@ function view() {
         if(canvasBall.y + canvasBall.r >= canvasPaddle.y){
             if(canvasBall.x >= canvasPaddle.x && canvasBall.x <= canvasPaddle.x + canvasPaddle.width){
                 canvasBall.yVelocity = - canvasBall.yVelocity;
-                canvasBall.xVelocity += acceleration;
                 canvasBall.yVelocity += acceleration;
             };
         };
@@ -157,11 +153,16 @@ function view() {
         if(canvasBall.x  >= b.x && canvasBall.x <= b.x + b.width
             && canvasBall.y - canvasBall.r >= b.y &&  canvasBall.y - canvasBall.r <= b.y + b.height) {
             canvasBall.yVelocity = -canvasBall.yVelocity;
-            canvasBall.yVelocity *= bounce;
             return true;
         }else{
             return false;
         };
+    };
+    
+    function setReplayFunction() {
+        replay.addEventListener("click", function () {
+            document.location.reload();
+        });
     };
 
 };
