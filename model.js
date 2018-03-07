@@ -9,8 +9,7 @@ function model(){
     y,
     z,
     pitch,
-    roll,
-    sensorInfo = document.getElementById("sensors");
+    roll;
 
     function round(number, precision) {
         var factor = Math.pow(10, precision);
@@ -48,11 +47,9 @@ function model(){
 
     this.getDistance = function() {
         if(window.DeviceOrientationEvent){
-             sensorInfo.innerHTML = "<p> Alpha = " + round(alpha,1) + " beta = " + round(beta,1) +  " gamma = " + round(gamma,1) + "</p>";
              return round(gamma,2);
 
         } else if(window.DeviceMotionEvent){
-            sensorInfo.innerHTML = "<p>x = " + round(smoothX,1) + " y = " + round(smoothY,1) +  " z = " + round(smoothZ,1) + "\n roll = " + round(roll,1) + "</p>";
             return round(roll,2);
         };
     };
