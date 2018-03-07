@@ -4,7 +4,7 @@ function view() {
         canvasBall,
         canvasPaddle,
         bricks = [],
-        brickRows = 4,
+        brickRows = 1,
         brickCols = 5,
         //gravity = 0.05,
         angle = (90 * Math.PI/180), // change to 45
@@ -28,14 +28,16 @@ function view() {
         },
         drawBricks = function (context) {
             var currentx = 0,
-                currenty = 0;
-            for(var i = 0; i < brickCols; i++){
-                for(var n = 0; n < brickRows; n++){
+                currenty = 0,
+                h;
+            for(var i = 0; i < brickRows; i++){
+                for(var n = 0; n < brickCols; n++){
+              //      console.log("in loop x is: " + bricks[i][n].x + " and y is: " + bricks[i][n].y + " status is: " +  bricks[i][n].status);
                     if(bricks[i][n].status === 1){
                         context.beginPath();
                         context.fillStyle = bricks[i][n].fillColor;
                         context.fillRect(currentx,currenty,bricks[i][n].width,bricks[i][n].height);
-                        //context.fill();
+                        h = bricks[i][n].height;
                         context.closePath();
                         bricks[i][n].x = currentx;
                         bricks[i][n].y = currenty;
@@ -43,10 +45,11 @@ function view() {
                     }
                 }
                 currentx = 0;
-                currenty = currenty + percentage(canvas.height,1)+ percentage(canvas.height, 4);
+                currenty = currenty + percentage(canvas.height,1)+ h;
             }
             currentx = 0;
             currenty = 0;
+            //console.log("outside loop x is: " + bricks[2][1].x + " and y is: " + bricks[2][1].y + " status is: " +  bricks[2][1].status);
         },
         canvasPaint =  function (){
             var context = canvas.getContext("2d");
@@ -74,10 +77,10 @@ function view() {
         canvasPaddle = {fillColor: "#d6e9c6", x: (canvas.width - percentage(canvas.width,70)), y: (canvas.height - percentage(canvas.height,5)), width: percentage(canvas.width,30), height: percentage(canvas.height,15)};
 
         bricks = [];
-        for(var i = 0; i < brickCols; i++){
+        for(var i = 0; i < brickRows; i++){
             bricks[i] = []
-            for(var n = 0; n < brickRows; n++){
-                bricks[i][n] = {fillColor: "#fdf3c3", x: 0, y: 0, width: percentage(canvas.width,23), height: percentage(canvas.height, 4), status: 1};
+            for(var n = 0; n < brickCols; n++){
+                bricks[i][n] = {fillColor: "#fdf3c3", x: 0, y: 0, width: percentage(canvas.width,18), height: percentage(canvas.height, 4), status: 1};
             }
         }
         loop();
@@ -93,11 +96,17 @@ function view() {
         wallCollision();
         paddleCollision();
 
-        for(var i = 0; i < brickCols; i++) {
-            for(var n = 0; n < brickRows; n++) {
-                if(brickCollision(bricks[i][n])){
-                    bricks[i][n].status = 0;
-                };
+        for(var i = 0; i < brickRows; i++) {
+            for(var n = 0; n < brickCols; n++) {
+               if( bricks[i][n].status === 1){
+                   if(brickCollision(bricks[i][n])){
+                       bricks[i][n].status = 0;
+                       console.log ("Collision  row " + i +" column " + n );
+                       console.log("collision x is: " + bricks[i][n].x + " and y is: " + bricks[i][n].y + " status is: " +  bricks[i][n].status);
+                       console.log("Ball x is  " +canvasBall.x + " y is " + canvasBall.y );
+                       console.log("Ball x + radius  is  " + (canvasBall.x + canvasBall.r) + " y is " + (canvasBall.y - canvasBall.r) );
+                   };
+               };
             };
         };
     };
@@ -145,7 +154,8 @@ function view() {
     };
 
     function brickCollision(b) {
-        if(canvasBall.x - canvasBall.r > b.x && canvasBall.x - canvasBall.r < b.x + b.width && canvasBall.y - canvasBall.r > b.y &&  canvasBall.y - canvasBall.r < b.y + b.height) {
+        if(canvasBall.x  >= b.x && canvasBall.x <= b.x + b.width
+            && canvasBall.y - canvasBall.r >= b.y &&  canvasBall.y - canvasBall.r <= b.y + b.height) {
             canvasBall.yVelocity = -canvasBall.yVelocity;
             canvasBall.yVelocity *= bounce;
             return true;
