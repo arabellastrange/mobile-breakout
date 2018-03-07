@@ -29,6 +29,15 @@ div#losingOverlay{
     overflow: hidden;
 }
 
+.icon{
+    width: 6em;
+    height: 7em;
+    margin: 1em;
+}
+
+div#message{
+    margin: 0;
+}
 div#score{
     height: 2em;
     font-size: 5em;

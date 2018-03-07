@@ -16,8 +16,11 @@ function view() {
         drawCircle = function (context, x,y,r, fill) {
             context.beginPath();
             context.fillStyle = fill;
+            context.strokeStyle = "#000000";
+            context.lineWidth = 4;
             context.arc(x,y,r,0,360);
             context.fill();
+            context.stroke();
             context.closePath();
         },
         drawRectangle = function (context, x, y, w, h, fill) {
@@ -84,7 +87,7 @@ function view() {
         canvas.height = window.innerHeight;
         setReplayFunction();
 
-        canvasBall = {fillColor: "pink", x: percentage(canvas.width,50), y: percentage(canvas.height,50) , r: 50, xVelocity: (Math.cos(angle)*speed), yVelocity: (Math.sin(angle)*speed)};
+        canvasBall = {fillColor: "#42CAD8", x: percentage(canvas.width,50), y: percentage(canvas.height,50) , r: 50, xVelocity: (Math.cos(angle)*speed), yVelocity: (Math.sin(angle)*speed)};
         canvasPaddle = {fillColor: "#48D8AE", x: (canvas.width - percentage(canvas.width,70)), y: (canvas.height - percentage(canvas.height,5)), width: percentage(canvas.width,25), height: percentage(canvas.height,15)};
 
         bricks = [];
