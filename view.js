@@ -1,6 +1,5 @@
 function view() {
-    var moving = document.getElementById("move"),
-        canvas = document.getElementById("canvas"),
+    var canvas = document.getElementById("canvas"),
         overlay = document.getElementById("losingOverlay"),
         replay = document.getElementById("replay"),
         scorePanel = document.getElementById("score"),
@@ -29,7 +28,7 @@ function view() {
             context.fillStyle = fill;
             context.strokeStyle = "#000000";
             context.lineWidth = 4;
-            context.rect(x,y,w,h);
+            context.rect(x,y,w, h);
             context.fill();
             context.stroke();
             context.closePath();
@@ -67,21 +66,18 @@ function view() {
             var context = canvas.getContext("2d");
 
             context.clearRect(0,0, canvas.width, canvas.height);
-
+            drawRectangle(context, canvasPaddle.x, canvasPaddle.y, canvasPaddle.width, canvasPaddle.height , canvasPaddle.fillColor);
             drawBricks(context);
 
-            drawRectangle(context, canvasPaddle.x, canvasPaddle.y, canvasPaddle.width, canvasPaddle.height , canvasPaddle.fillColor);
+            moveBall();
 
             drawCircle(context,canvasBall.x, canvasBall.y, canvasBall.r, canvasBall.fillColor);
-
-            moveBall();
 
             updateScore();
         };
 
     this.movePaddle = function (distance) {
         var newLoc = percentage((canvasPaddle.x + distance),95);
-        moving.innerHTML = moving.innerHTML + "current pos of paddle: " + canvasPaddle.x + " moving to: " + newLoc + "\n";
         canvasPaddle.x = newLoc;
         canvasPaint();
     };
@@ -89,15 +85,14 @@ function view() {
     this.init = function () {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         setReplayFunction();
 
         canvasBall = {fillColor: "#42CAD8", x: percentage(canvas.width,50), y: percentage(canvas.height,50) , r: 50, xVelocity: (Math.cos(angle)*speed), yVelocity: (Math.sin(angle)*speed)};
-        canvasPaddle = {fillColor: "#48D8AE", x: (canvas.width - percentage(canvas.width,60)), y: (canvas.height - percentage(canvas.height,5)), width: percentage(canvas.width,25), height: percentage(canvas.height,5)};
+        canvasPaddle = {fillColor: "#48D8AE", x: (canvas.width - percentage(canvas.width,70)), y: (canvas.height - percentage(canvas.height,5)), width: percentage(canvas.width,25), height: percentage(canvas.height,15)};
 
         bricks = [];
         for(var i = 0; i < brickRows; i++){
-            bricks[i] = [];
+            bricks[i] = []
             for(var n = 0; n < brickCols; n++){
                 bricks[i][n] = {fillColor: "#FDF3EA", x: 0, y: 0, width: percentage(canvas.width,18), height: percentage(canvas.height, 4), status: 1};
             }
@@ -114,9 +109,8 @@ function view() {
         canvasBall.x += canvasBall.xVelocity;
         canvasBall.y += canvasBall.yVelocity;
 
-        wallCollision();
-
         paddleCollision();
+        wallCollision();
 
         for(var i = 0; i < brickRows; i++) {
             for(var n = 0; n < brickCols; n++) {
@@ -124,6 +118,10 @@ function view() {
                    if(brickCollision(bricks[i][n])){
                        bricks[i][n].status = 0;
                        score++;
+                       /*console.log ("Collision  row " + i +" column " + n );
+                       console.log("collision x is: " + bricks[i][n].x + " and y is: " + bricks[i][n].y + " status is: " +  bricks[i][n].status);
+                       console.log("Ball x is  " +canvasBall.x + " y is " + canvasBall.y );
+                       console.log("Ball x + radius  is  " + (canvasBall.x + canvasBall.r) + " y is " + (canvasBall.y - canvasBall.r) );*/
                    };
                };
             };
@@ -131,7 +129,7 @@ function view() {
     };
 
     function loop() {
-        gameLoop = setInterval(canvasPaint, 20);
+        gameLoop = setInterval(canvasPaint, 30);
     };
 
     function percentage(number, percent) {
@@ -147,10 +145,8 @@ function view() {
             canvasBall.xVelocity = -canvasBall.xVelocity;
         };
         if(canvasBall.y + canvasBall.r >= canvas.height){
-            //clearInterval(gameLoop);
-            //losingScreen();
-            canvasBall.y = canvas.height - canvasBall.r;
-            canvasBall.yVelocity = - canvasBall.yVelocity;
+            clearInterval(gameLoop);
+            losingScreen();
 
         }else if(canvasBall.y - canvasBall.r <= 0){
             canvasBall.y = canvasBall.r;
