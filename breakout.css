@@ -8,33 +8,6 @@ div#main{
     height: 100vh;
 }
 
-div#losingOverlay{
-    height: 100vh;
-    width: 0;
-    background-color: #FBCAB1;
-    background-color: rgba(251,202,177,0.8);
-    transition: 0.5s;
-    font-size: 5.5em;
-    font-family: "Upheaval";
-    text-align: center;
-    color: white;
-    position: absolute;
-    overflow: hidden;
-}
-
-button#replay{
-    background-color: transparent;
-    font-family: "Upheaval";
-    font-size: 1.5em;
-    line-height: 2em;
-    border: 0;
-}
-
-@font-face {
-    font-family: "Upheaval";
-    src: url("font/upheavtt.ttf");
-}
-
 
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 
