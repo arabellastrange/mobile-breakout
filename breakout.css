@@ -32,7 +32,7 @@ div#losingOverlay{
 .icon{
     width: 6em;
     height: 7em;
-    margin: 2em;
+    margin: 1em;
 }
 
 div#message{
@@ -46,9 +46,6 @@ div#score{
     line-height: 2em;
     color: white;
     padding-left: 0.5em;
-    border: 6px;
-    border-color: #000;
-    border-style: solid;
 }
 
 button#replay{
