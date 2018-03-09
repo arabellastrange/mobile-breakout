@@ -1,18 +1,17 @@
 function view() {
-    var canvas = document.getElementById("canvas"),
+    var moving = document.getElementById("move"),
+        canvas = document.getElementById("canvas"),
         overlay = document.getElementById("losingOverlay"),
         replay = document.getElementById("replay"),
-        scorePanel = document.getElementById("score"),
         canvasBall,
         canvasPaddle,
         bricks = [],
         brickRows = 4,
         brickCols = 5,
-        angle = (90 * Math.PI/180), // change to 45
+        angle = (45 * Math.PI/180), // change to 45
         speed = 25,
         acceleration = 0.5,
         gameLoop,
-        score = 0,
         drawCircle = function (context, x,y,r, fill) {
             context.beginPath();
             context.fillStyle = fill;
@@ -23,11 +22,8 @@ function view() {
         drawRectangle = function (context, x, y, w, h, fill) {
             context.beginPath();
             context.fillStyle = fill;
-            context.strokeStyle = "#000000";
-            context.lineWidth = 4;
-            context.rect(x,y,w, h);
+            context.fillRect(x,y,w, h);
             context.fill();
-            context.stroke();
             context.closePath();
         },
         drawBricks = function (context) {
@@ -40,11 +36,7 @@ function view() {
                     if(bricks[i][n].status === 1){
                         context.beginPath();
                         context.fillStyle = bricks[i][n].fillColor;
-                        context.strokeStyle = "#000000";
-                        context.lineWidth = 4;
-                        context.rect(currentx,currenty,bricks[i][n].width,bricks[i][n].height);
-                        context.fill();
-                        context.stroke();
+                        context.fillRect(currentx,currenty,bricks[i][n].width,bricks[i][n].height);
                         h = bricks[i][n].height;
                         context.closePath();
                         bricks[i][n].x = currentx;
@@ -67,14 +59,12 @@ function view() {
             drawBricks(context);
 
             moveBall();
-
             drawCircle(context,canvasBall.x, canvasBall.y, canvasBall.r, canvasBall.fillColor);
-
-            updateScore();
         };
 
     this.movePaddle = function (distance) {
         var newLoc = percentage((canvasPaddle.x + distance),95);
+        moving.innerHTML = "current pos of paddle: " + canvasPaddle.x + " moving to: " + newLoc;
         canvasPaddle.x = newLoc;
         canvasPaint();
     };
@@ -85,13 +75,13 @@ function view() {
         setReplayFunction();
 
         canvasBall = {fillColor: "pink", x: percentage(canvas.width,50), y: percentage(canvas.height,50) , r: 50, xVelocity: (Math.cos(angle)*speed), yVelocity: (Math.sin(angle)*speed)};
-        canvasPaddle = {fillColor: "#48D8AE", x: (canvas.width - percentage(canvas.width,70)), y: (canvas.height - percentage(canvas.height,5)), width: percentage(canvas.width,25), height: percentage(canvas.height,15)};
+        canvasPaddle = {fillColor: "#d6e9c6", x: (canvas.width - percentage(canvas.width,70)), y: (canvas.height - percentage(canvas.height,5)), width: percentage(canvas.width,30), height: percentage(canvas.height,15)};
 
         bricks = [];
         for(var i = 0; i < brickRows; i++){
             bricks[i] = []
             for(var n = 0; n < brickCols; n++){
-                bricks[i][n] = {fillColor: "#FDF3EA", x: 0, y: 0, width: percentage(canvas.width,18), height: percentage(canvas.height, 4), status: 1};
+                bricks[i][n] = {fillColor: "#fdf3c3", x: 0, y: 0, width: percentage(canvas.width,18), height: percentage(canvas.height, 4), status: 1};
             }
         };
 
@@ -114,7 +104,6 @@ function view() {
                if( bricks[i][n].status === 1){
                    if(brickCollision(bricks[i][n])){
                        bricks[i][n].status = 0;
-                       score++;
                        /*console.log ("Collision  row " + i +" column " + n );
                        console.log("collision x is: " + bricks[i][n].x + " and y is: " + bricks[i][n].y + " status is: " +  bricks[i][n].status);
                        console.log("Ball x is  " +canvasBall.x + " y is " + canvasBall.y );
@@ -174,10 +163,6 @@ function view() {
         replay.addEventListener("click", function () {
             document.location.reload();
         });
-    };
-
-    function updateScore() {
-      scorePanel.innerText = "Score: " + score;
     };
 
 };

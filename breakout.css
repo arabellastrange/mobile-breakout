@@ -3,23 +3,16 @@
 /*yellow: #FDF3C3*/
 
 div#main{
-    background-image: url("img/backgroundGreen.jpeg");
-    background-repeat: no-repeat;
-    height: calc(100vh - 10em);
-    background-size: cover;
-}
-
-canvas{
-    height: 100%;
-    width: 100%;
-    padding: 10px;
+    background-image: url("img/background.png");
+    background-repeat: round;
+    height: 100vh;
 }
 
 div#losingOverlay{
     height: 100vh;
     width: 0;
-    background-color: #088fa4;
-    background-color: rgba(8,143,164,0.8);
+    background-color: #FBCAB1;
+    background-color: rgba(251,202,177,0.8);
     transition: 0.5s;
     font-size: 5.5em;
     font-family: "Upheaval";
@@ -27,16 +20,6 @@ div#losingOverlay{
     color: white;
     position: absolute;
     overflow: hidden;
-}
-
-div#score{
-    height: 2em;
-    font-size: 5em;
-    background-color: #088fa4;
-    font-family: "Upheaval";
-    line-height: 2em;
-    color: white;
-    padding-left: 0.5em;
 }
 
 button#replay{
